@@ -1,0 +1,260 @@
+<%- layout('layouts/main.ejs')%>
+
+  <div class="row mt-5">
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <form id ="addEventForm" onSubmit="return addEvent();">
+            <input type="text" name="action" class="form-control" placeholder="Action" autofocus>
+            <input type="text" name="selector" class="form-control mt-2" placeholder="Selector">
+            <input type="text" name="value" class="form-control mt-2" placeholder="Value">
+            <input type="number" name="keycode" class="form-control mt-2" placeholder="keycode">
+            <button type="submit" class="btn btn-primary btn-block mt-2">Add Event</button>
+          </form>
+        </div>
+      </div>
+      <div class="card" id ="editformtoshow" style="display:none;">
+          <div class="card-body">
+            <form id ="EditEventForm" onSubmit="return EditEvent();">
+              <input type="text" id ="editAction" name="action" class="form-control" placeholder="Action" autofocus>
+              <input type="text" id="editSelector" name="selector" class="form-control mt-2" placeholder="Selector">
+              <input type="text" id="editValue"name="value" class="form-control mt-2" placeholder="Value">
+              <input type="number" id ="editKeycode" name="keycode" class="form-control mt-2" placeholder="keycode">
+              <input type="number" id ="editsortingNumber" name="sorting" class="form-control mt-2" placeholder="sorting readonly" >
+              <button type="submit" class="btn btn-primary btn-block mt-2">Edit Event</button>
+            </form>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class='test' hidden data-test-value='<%= JSON.stringify(docs) %>'></div>
+      <table class="table table-bordered bg-light table-hover" id ="test">
+        <thead>
+          <tr class="headings">
+            <td>Action</td>
+            <td>Selector</td>
+            <td>Delete</td>
+            <td>Edit</td>
+          </tr>
+        </thead>
+        <tbody id="myEvents" >
+          <% docs[0].events.forEach(function (elements) { %>
+            <tr id=<%= elements.sorting%>> 
+              <td><%= elements.action %></td>
+              <td><%= elements.selector %></td>
+              <td>
+                  <a onclick="deleteClick('<%= elements.id %>',$(this) )"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+              </td>
+              <td>
+                  <a onclick="editClick('<%= elements.id %>',$(this) )"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+              </td>
+              <td>
+                <% if(elements.action == 'record_api'){ %>
+                  <button id ="awaitForButton" onClick ="awaitFor('<%= elements.id %>' ,$(this) )" style="background-color:red" class="btn btn-primary btn-block mt-2">Await For</button>
+              <% } %>
+                </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <button id ="subTheChanges" onClick ="SubmitChange()" type="submit" class="btn btn-primary btn-block mt-2">Submit the Changes</button>
+      
+    </div>
+  </div>
+
+  <style>
+    .product-highlight {
+      background: red;
+    }
+    tbody tr:hover {
+      cursor: move; 
+    }
+  </style>
+
+  <% block('scripts').append(`<script>
+    var test = document.getElementsByClassName('test');
+    var x = JSON.parse(test[0].dataset.testValue)[0].events;
+    // console.log(x, " first one");
+    var GlobalEditId = null;
+
+
+    function deleteClick(id,row) {
+
+      for (var i = x.length - 1; i >= 0; --i) {
+           if (x[i].id == id) { 
+                 x.splice(i,1);
+            }
+        }
+      $(row.closest("tr")).remove()
+
+      console.log(x, " after delete row");
+        
+    }
+
+  function editClick(id,row) {
+
+    $("#editformtoshow").toggle();
+
+    for (var i = x.length - 1; i >= 0; --i) {
+        if (x[i].id == id) {
+          $("#editAction").val(x[i].action);
+          $("#editSelector").val(x[i].selector);
+          $("#editValue").val(x[i].value);
+          $("#editKeycode").val(x[i].keycode);
+          $('#editsortingNumber').val(x[i].sorting);
+
+          
+        }
+        GlobalEditId=id;
+      }
+      console.log(x ," after edit click");
+  }
+
+
+    function addEvent()
+    {
+      console.log('before add event');
+      var queryString = $('#addEventForm').serializeArray();
+      var obj = {};
+      queryString.forEach(function(item)
+      {
+        obj[item.name]=item.value;
+      
+      })
+      obj['sorting']= x.length
+    
+
+      x.push(obj);
+      console.log(x, "after add event to x");
+      var newRow = $("<tr>");
+      var cols = "";
+
+        cols += '<td>' + obj['action'] + '</td>';
+        cols += '<td>'+ obj['selector'] + '</td>';
+        // cols += '<td><input type="text" class="form-control" name="phone' + counter + '"/></td>';
+        cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+        newRow.append(cols);
+        $("#test").append(newRow);
+      console.log(x, "after row appended");
+      return false
+      
+    } 
+    function EditEvent() {
+     
+      console.log('before edit event clicked')
+      var editqueryString = $('#EditEventForm').serializeArray();
+      console.log(editqueryString);
+
+    for (var i = x.length - 1; i >= 0; --i) {
+        if (x[i].id == GlobalEditId) {
+          console.log(x[i].action)
+       
+          x[i].action = editqueryString[0].value
+          x[i].selector= editqueryString[1].value
+          x[i].value = editqueryString[2].value
+          x[i].keycode =editqueryString[3].value
+          x[i].sorting = editqueryString[4].value
+
+
+         
+      }
+    }
+      $("#editformtoshow").toggle();
+      GlobalEditId = null;
+      console.log(GlobalEditId)
+      console.log(x, " after edit event");
+      return false
+  }
+
+
+  var elemclicked = false;
+  function awaitFor(id, context)
+  {
+     
+      console.log('clicked', id)
+
+  if(context.data('clicked')) {
+      context.data('clicked', false);
+        for (var i = x.length - 1; i >= 0; --i) {
+            if (x[i].id == id) {
+              x[i].waitfor=false;
+              context.css('background-color','red');
+            }
+        }
+    }
+    else {
+      context.data('clicked', true);
+      for (var i = x.length - 1; i >= 0; --i) {
+            if (x[i].id == id) {
+              x[i].waitfor=true;
+              context.css('background-color','green');
+            }
+        }
+        
+    }
+  console.log(x ,  "after await");
+}
+
+function SubmitChange(){
+
+  console.log('clicked the submitascascascascs')
+    const url = 'events';
+    console.log(x);
+    let send = { "data" : x};
+   $.post(url, send, function(res) {
+      console.log(test,"tfuygj");
+    })
+}
+
+$('tbody').sortable({
+      items: "tr:not('.headings')",
+      placeholder: 'bg-warning', 
+      update: async function() {
+
+       var order = await $('tbody').sortable('toArray'); 
+       console.log(order,"order")
+
+      await helpSort(order);
+      // console.log(x, "1st event");
+      // await sort();
+
+      // console.log(x, "2nd event");
+
+        //  updaterow(order);
+
+      }
+  });
+
+
+function helpSort(order)
+{
+  var map = new Map();
+        var i;
+        for (index = 0; index < order.length; index++) { 
+            map[order[index]] = index;
+        }
+
+        for (k = 0 ;k <x.length ; k++)
+        {
+          x[k].sorting = map[k];
+        }
+        map.clear()
+}
+  
+function sort()
+{
+  var testArray =[];
+  for ( i =0 ; i < x.length ;i++)
+  {
+    testArray[parseInt(x[i].sorting)] = x[i];
+
+  }
+    x=testArray.slice();
+    x[0]=x[1]
+    
+}
+
+
+  </script>`)%>
