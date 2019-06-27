@@ -2,11 +2,37 @@ async function testcase (){
   const browser = await puppeteer.launch({headless : false, sloMo:250 , defaultViewport:null })
   var page = await browser.newPage()
   
-  const navigationPromise = page.waitForNavigation({waitUntil:'networkidle0'})
+  
   
   await page.goto('https://www.goibibo.com/hotels/',{timeout: 15000,
       waitUntil: 'domcontentloaded'})
  
+     var pagePromise = new Promise(  function (resolve, reject) {
+
+      let listener =  async (target) =>{
+
+      try {
+
+      page = await target.page();
+       
+      browser.removeListener('targetcreated', listener);
+
+      resolve();
+
+      return true;
+
+      } catch (err) {
+
+      reject();
+
+      }
+
+      }
+
+      browser.on('targetcreated', listener);
+
+      });
+
   
   await page.waitForSelector('#content #Home')
  
@@ -21,17 +47,38 @@ async function testcase (){
   await page.keyboard.down('G')
 
   
-   try {await page.waitForResponse('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/',{timeout:2000})} catch(err){}
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
+
   
   await page.keyboard.down('O')
 
   
-   try {await page.waitForResponse('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/',{timeout:2000})} catch(err){}
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
+
   
   await page.keyboard.down('A')
 
   
-   try {await page.waitForResponse('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/',{timeout:2000})} catch(err){}
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
+
   
   await page.keyboard.press('ArrowDown')
 
@@ -45,61 +92,73 @@ async function testcase (){
   await page.keyboard.press('Enter')
 
   
-   try {await page.waitForResponse('https://hermes.goibibo.com/hotels/v7/search/data/v3/8717279093827200968/20190628/20190629/1-2-0',{timeout:2000})} catch(err){}
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://hermes.goibibo.com/hotels/v7/search/data/v3/8717279093827200968/20190630/20190701/1-2-0') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
+
+  
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://hermes.goibibo.com/hotels/v7/search/data/v3/8717279093827200968/20190630/20190701/1-2-0') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
+
   
   await page.waitForSelector('.srpCards:nth-child(2) > .col-md-8 > .width100 > .col-md-12 > .col-md-9 > .width100 > a > .fl')
  
   await page.click('.srpCards:nth-child(2) > .col-md-8 > .width100 > .col-md-12 > .col-md-9 > .width100 > a > .fl')
 
   
-   try {await page.waitForResponse('https://hermes.goibibo.com/hotels/v7/detail/price/v3/8717279093827200968/20190628/20190629/1-2-0/3151651750935824029',{timeout:2000})} catch(err){}
+  await pagePromise
   
-   await navigationPromise
-  var pages = await browser.pages();
- page = pages[pages.length-1];
- pages = await browser.pages();
-page = pages[pages.length-1];
-console.log(page.url());
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://hermes.goibibo.com/hotels/v7/detail/price/v3/8717279093827200968/20190630/20190701/1-2-0/8148672539841588159') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
 
-  
-   try {await page.waitForResponse('https://hermes.goibibo.com/hotels/v7/search/data/v3/8717279093827200968/20190628/20190629/1-2-0',{timeout:2000})} catch(err){}
-  
-  await page.waitForSelector('.col-md-12 #home_textHook')
- 
-  await page.click('.col-md-12 #home_textHook')
-
-  
-  await page.waitForSelector('.paxWrap > .fl > .selectBoxWrap:nth-child(1) > .customSelect > select')
- 
-  await page.click('.paxWrap > .fl > .selectBoxWrap:nth-child(1) > .customSelect > select')
-
-  
-  await page.select('.paxWrap > .fl > .selectBoxWrap:nth-child(1) > .customSelect > select', '3')
-
-  
-  await page.waitForSelector('#paxcontainer_home > .paxContainer > .paxWrap > .fl > .button')
- 
-  await page.click('#paxcontainer_home > .paxContainer > .paxWrap > .fl > .button')
-
-  
-   try {await page.waitForResponse('https://hermes.goibibo.com/hotels/v7/detail/price/v3/8717279093827200968/20190628/20190629/3-2-0/3151651750935824029',{timeout:2000})} catch(err){}
   
   await page.waitForSelector('.width100 > .width100 > .width100 > a > .button')
  
   await page.click('.width100 > .width100 > .width100 > a > .button')
 
   
-  await page.waitForSelector('.popBody > .width100 > .col-md-5 > a > .button')
- 
-  await page.click('.popBody > .width100 > .col-md-5 > a > .button')
+  await pagePromise
+  
+  await pagePromise
+  
+   try {await page.waitForResponse( response => {
+    if(response.status() === 200 && response.url().match('https://www.goibibo.com/hotels/personalized-getHotelDescBlock/') ){
+      console.log(response.url());
+ return true; 
+}},{timeout:3000})} 
+ catch(err)
+{console.log(err);}
 
   
-   await navigationPromise
-  var pages = await browser.pages();
- page = pages[pages.length-1];
- pages = await browser.pages();
-page = pages[pages.length-1];
-console.log(page.url());
+  await page.waitForSelector('#travellerForm #lastname1')
+ 
+  await page.click('#travellerForm #lastname1')
+
+  
+  await page.keyboard.down('D')
+
+  
+  await page.keyboard.down('D')
+
+  
+  await page.keyboard.down('D')
+
+  
+  await page.keyboard.down('D')
 
   
 await page.screenshot({path: 'buddy-screenshot.png'});

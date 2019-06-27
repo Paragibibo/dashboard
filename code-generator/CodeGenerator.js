@@ -104,7 +104,7 @@ await browser.close()
 
     if (this._hasNavigation && this._options.waitForNavigation) {
       // console.debug('Adding navigationPromise declaration')
-      const block = new Block(this._frameId, { type: pptrActions.NAVIGATION_PROMISE, value: `const navigationPromise = page.waitForNavigation({waitUntil:'networkidle0'})` })
+      const block = new Block(this._frameId, { type: pptrActions.NAVIGATION_PROMISE, value: `` })
       this._blocks.unshift(block)
     }
 
@@ -180,11 +180,26 @@ await browser.close()
   }
   _handleGoto (href) {
     return new Block(this._frameId  , { type: pptrActions.GOTO, value: `await ${this._frame}.goto('${href}',{timeout: 15000,
-      waitUntil: 'domcontentloaded'})\n ` })
+      waitUntil: 'domcontentloaded'})\n 
+     var pagePromise = new Promise(  function (resolve, reject) {\n
+      let listener =  async (target) =>{\n
+      try {\n
+      page = await target.page();\n       
+      browser.removeListener('targetcreated', listener);\n
+      resolve();\n
+      return true;\n
+      } catch (err) {\n
+      reject();\n
+      }\n
+      }\n
+      browser.on('targetcreated', listener);\n
+      });\n` })
 
   }
   _handleApi (selector) {
-        return new Block(this._frameId  , { type: pptrActions.RECORD_API, value: ` try {await ${this._frame}.waitForResponse('${selector}',{timeout:2000})} catch(err){}` })
+     return new Block(this._frameId  , { type: pptrActions.RECORD_API, value: ` try {await ${this._frame}.waitForResponse( response => {\n    if(response.status() === 200 && response.url().match('${selector}') ){\n      console.log(response.url());\n return true; \n}},{timeout:3000})} \n catch(err)\n{console.log(err);}\n` })
+
+
   }
 
   _handleViewport (width, height) {
@@ -192,10 +207,10 @@ await browser.close()
   }
 
   _handleWaitForNavigation () {
-    const block = new Block(this._frameId)
-    if (this._options.waitForNavigation) {
-      block.addLine({type: pptrActions.NAVIGATION, value: ` await navigationPromise\n  var pages = await browser.pages();\n page = pages[pages.length-1];\n pages = await browser.pages();\npage = pages[pages.length-1];\nconsole.log(page.url());\n`})
-    }
+
+    var block= new Block(this._frameId  , { type: pptrActions.NAVIGATION, value: `await pagePromise` })
+    
+
     return block
   }
 
