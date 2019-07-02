@@ -197,7 +197,7 @@ await browser.close()
 
   }
   _handleApi (selector) {
-     return new Block(this._frameId  , { type: pptrActions.RECORD_API, value: ` try {await ${this._frame}.waitForResponse( response => {\n    if(response.status() === 200 && response.url().match('${selector}') ){\n      console.log(response.url());\n return true; \n}},{timeout:3000})} \n catch(err)\n{console.log(err);}\n` })
+     return new Block(this._frameId  , { type: pptrActions.RECORD_API, value: ` try {await ${this._frame}.waitForResponse( response => {\n    if(response.status() === 200 && response.url().match('${selector}') ){\n      console.log(response.url());\n return true; \n}},{timeout:3000})} \n catch(err)\n{}\n` })
 
 
   }
