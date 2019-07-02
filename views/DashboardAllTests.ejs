@@ -25,7 +25,7 @@
               <td><%= elements.testId %></td>
               <td><%= elements.testDesc %></td>
               <td>
-                  <a onclick="deleteClick('<%= elements.testId %>',$(this) )"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+                  <a href="testingDashboard/delete/<%= elements._id %>" ><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
               </td>
               <td>
                   <a  href="/view/<%= elements.testId %>" ><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
@@ -52,7 +52,7 @@
     var test = document.getElementsByClassName('test');
     var x = JSON.parse(test[0].dataset.testValue)[0];
     
-    console.log(y, " first one");
+   
 
 
     function deleteClick(id,row) {

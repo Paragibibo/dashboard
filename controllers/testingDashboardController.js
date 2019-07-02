@@ -26,6 +26,18 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/delete/:id', (req, res) => {
+    console.log(req.params.id," at dashboard delete");
+    SelectorEvents.findByIdAndRemove(req.params.id, (err, doc) => {
+        if (!err) {
+            res.redirect('/testingDashboard');
+        }
+        else { console.log('Error in Testcase delete :' + err); }
+    });
+});
+
+
+
 
 // router.post('/events', async(req, res) => {
 //     // let testNum = req.flash('testNumber')
