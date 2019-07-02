@@ -9,7 +9,8 @@ var selectorSchema = new mongoose.Schema({
     script: String ,
     testName : String,
     testId : String,
-    testDesc: String
+    testDesc: String,
+    isScriptReady: Boolean
 
 });
 

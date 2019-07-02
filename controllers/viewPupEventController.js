@@ -38,10 +38,11 @@ router.post('/events', async(req, res) => {
     const codeGen = new CodeGenerator()
     var code = codeGen.generate(req.body.data);
 
-     SelectorEvents.findOneAndUpdate({'testId' :  testId.testId}, { "$set": { "events":req.body.data, "script" : code }},function(err, docs)
+    await  SelectorEvents.findOneAndUpdate({'testId' :  testId.testId}, { "$set": { "events":req.body.data, "script" : code , "isScriptReady": true }}, async function(err, docs)
     {
         console.log(docs.testName, "testssssssss");
-        createFile(code, docs.testName);
+        await createFile(code, docs.testName);
+        
 
     });
 });

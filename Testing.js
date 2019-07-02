@@ -1,5 +1,5 @@
 async function testcase (){
-  const browser = await puppeteer.launch({headless : false, sloMo:250 , defaultViewport:null })
+  const browser = await puppeteer.launch({headless : true, sloMo:250 , defaultViewport:null })
   var page = await browser.newPage()
   
   await page.goto('https://www.goibibo.com/hotels/',{timeout: 15000,
@@ -51,31 +51,13 @@ async function testcase (){
  return true; 
 }},{timeout:3000})} 
  catch(err)
-{console.log(err);}
+{}
 
   
   await page.keyboard.down('O')
 
   
-   try {await page.waitForResponse( response => {
-    if(response.status() === 200 && response.url().match('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/') ){
-      console.log(response.url());
- return true; 
-}},{timeout:3000})} 
- catch(err)
-{console.log(err);}
-
-  
   await page.keyboard.down('A')
-
-  
-   try {await page.waitForResponse( response => {
-    if(response.status() === 200 && response.url().match('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/') ){
-      console.log(response.url());
- return true; 
-}},{timeout:3000})} 
- catch(err)
-{console.log(err);}
 
   
   await page.keyboard.press('ArrowDown')
@@ -85,24 +67,6 @@ async function testcase (){
 
   
   await page.keyboard.press('Enter')
-
-  
-   try {await page.waitForResponse( response => {
-    if(response.status() === 200 && response.url().match('https://hermes.goibibo.com/hotels/v7/search/data/v3/8717279093827200968/20190705/20190706/1-2-0') ){
-      console.log(response.url());
- return true; 
-}},{timeout:3000})} 
- catch(err)
-{console.log(err);}
-
-  
-   try {await page.waitForResponse( response => {
-    if(response.status() === 200 && response.url().match('https://hermes.goibibo.com/hotels/v7/search/data/v3/8717279093827200968/20190705/20190706/1-2-0') ){
-      console.log(response.url());
- return true; 
-}},{timeout:3000})} 
- catch(err)
-{console.log(err);}
 
   
 await page.screenshot({path: 'buddy-screenshot.png'});

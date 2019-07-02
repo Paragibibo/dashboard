@@ -2,7 +2,7 @@
 
   <div class="row mt-5">
 
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
       <div class="card">
         <div class="card-body">
           <form id ="addEventForm" onSubmit="return addEvent();">
@@ -26,7 +26,7 @@
             </form>
           </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="col-md-6">
         <div class='test' hidden data-test-value='<%= JSON.stringify(docs) %>'></div>
@@ -35,8 +35,9 @@
           <tr class="headings">
             <td>Action</td>
             <td>Selector</td>
-            <td>Delete</td>
-            <td>Edit</td>
+            <!-- <td>Delete</td>
+            <td>Edit</td> -->
+            <td>Wait For Api</td>
           </tr>
         </thead>
         <tbody id="myEvents" >
@@ -44,23 +45,27 @@
             <tr id=<%= elements.sorting%>> 
               <td><%= elements.action %></td>
               <td><%= elements.selector %></td>
-              <td>
+              <!-- <td>
                   <a onclick="deleteClick('<%= elements.id %>',$(this) )"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
               </td>
               <td>
                   <a onclick="editClick('<%= elements.id %>',$(this) )"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
-              </td>
-              <td>
+              </td> -->
+              <td> 
+
                 <% if(elements.action == 'record_api'){ %>
-                  <button id ="awaitForButton" onClick ="awaitFor('<%= elements.id %>' ,$(this) )" style="background-color:red" class="btn btn-primary btn-block mt-2">Await For</button>
-              <% } %>
+                  <% if(elements.waitfor == 'true'){ %>
+                    <button id ="awaitForButton" onClick ="awaitFor('<%= elements.id %>', '<%= elements.waitfor %>' ,$(this) )" style="background-color:green" class="btn btn-primary btn-block mt-2">AwFor</button>
+                  <% }else { %>
+                    <button id ="awaitForButton" onClick ="awaitFor('<%= elements.id %>', '<%= elements.waitfor %>' ,$(this) )" style="background-color:red" class="btn btn-primary btn-block mt-2">Await For</button>
+                  <% } %>  
+                <% } %>
                 </td>
             </tr>
           <% }) %>
         </tbody>
       </table>
-      <button id ="subTheChanges" onClick ="SubmitChange()" type="submit" class="btn btn-primary btn-block mt-2">Submit the Changes</button>
-      <a href="/run/<%= docs[0].testName %>"class="btn btn-xs btn-info pull-right">Run Test After Submit Changes</a>
+      <a href = "/testingDashboard" id ="subTheChanges" onClick ="return SubmitChange()"  class="btn btn-primary btn-block mt-2">Submit the Changes</a>
       
     </div>
   </div>
@@ -172,9 +177,8 @@
 
 
   var elemclicked = false;
-  function awaitFor(id, context)
-  {
-     
+  function awaitFor(id, waitfor, context)
+  { 
       console.log('clicked', id)
 
   if(context.data('clicked')) {
@@ -208,13 +212,8 @@ function SubmitChange(){
    $.post(url, send, function(res) {
       console.log(test,"tfuygj");
     })
-}
 
-function runtestCase(){
-
-console.log('clicked the submitascascascascs');
-
-
+    return true;
 }
 
 $('tbody').sortable({

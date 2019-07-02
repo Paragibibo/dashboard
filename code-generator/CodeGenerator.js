@@ -4,13 +4,13 @@ const Block = require('./Block')
 
 const importPuppeteer = ``
 
-const header = `const browser = await puppeteer.launch({headless : false, defaultViewport:null})
+const header = `const browser = await puppeteer.launch({headless : true, defaultViewport:null})
 var page = await browser.newPage()\n`
 
 const footer = `await browser.close()`
 
 const wrappedHeader = `async function testcase (){
-  const browser = await puppeteer.launch({headless : false, sloMo:250 , defaultViewport:null })
+  const browser = await puppeteer.launch({headless : true, sloMo:250 , defaultViewport:null })
   var page = await browser.newPage()\n`
 
 const wrappedFooter = `await page.screenshot({path: 'buddy-screenshot.png'});\n
@@ -46,7 +46,7 @@ await browser.close()
   _getHeader () {
     // console.debug(this._options)
     let hdr = this._options.wrapAsync ? wrappedHeader : header
-    hdr = this._options.headless ? hdr : hdr.replace('launch()', 'launch({ headless: false ,sloMo:100,defaultViewport:null})')
+    hdr = this._options.headless ? hdr : hdr.replace('launch()', 'launch({ headless: true ,sloMo:100,defaultViewport:null})')
     return hdr
   }
 

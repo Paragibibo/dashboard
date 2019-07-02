@@ -26,7 +26,7 @@ function insertEvent(req, res) {
     SelectorEvent.testName = req.body.filename;
     SelectorEvent.testDesc = req.body.descname;
     SelectorEvent.testId = generateUUID();
-    
+    SelectorEvent.isScriptReady = false;
     SelectorEvent.script=req.body.script;
     
     SelectorEvent.save((err) => {

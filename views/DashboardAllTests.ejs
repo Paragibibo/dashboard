@@ -1,12 +1,10 @@
 <%- layout('layouts/main.ejs')%>
 
-  <div class="row mt-5">
+  
 
-    <div class="col-md-6">
 
-    </div>
 
-    <div class="col-md-6">
+    <div class="col-md-12">
         <div class='test' hidden data-test-value='<%= JSON.stringify(docs) %>'></div>
       <table class="table table-bordered bg-light table-hover" id ="test">
         <thead>
@@ -14,6 +12,7 @@
             <td>TestName</td>
             <td>TestId</td>
             <td>Test Description</td>
+            <td>Run test</td>
             <td>Delete</td>
             <td>Edit</td>
           </tr>
@@ -24,6 +23,14 @@
               <td><%= elements.testName %></td>
               <td><%= elements.testId %></td>
               <td><%= elements.testDesc %></td>
+              <td>
+                    <% if(elements.isScriptReady == true){ %>
+                    <a onclick="runTest('<%= elements.testName %>' )" class="btn btn-xs btn-info pull-right">Run Test</a>
+                    <% } else{ %>
+                     <a class="btn btn-xs btn-info pull-right" >Script Not Ready</a>
+                     <% } %>
+
+              </td>
               <td>
                   <a href="testingDashboard/delete/<%= elements._id %>" ><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
               </td>
@@ -37,7 +44,7 @@
      
       
     </div>
-  </div>
+  
 
   <style>
     .product-highlight {
@@ -55,17 +62,16 @@
    
 
 
-    function deleteClick(id,row) {
-
-      for (var i = x.length - 1; i >= 0; --i) {
-           if (x[i].testId == id) { 
-                 x.splice(i,1);
-            }
+    function runTest(testName) {
+        alert('run the script in backend');
+        $.ajax({
+        type: 'GET',
+        url: 'run/' + testName,
+        success: function(result) {
+            console.log(result);
+            alert('status: ' + result.status + 'Success: ' +result.success);
         }
-      $(row.closest("tr")).remove()
-
-      console.log(x, " after delete row");
-        
+      });
     }
 
   function editClick(id,row) {
