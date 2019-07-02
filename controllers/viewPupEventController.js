@@ -5,17 +5,19 @@ const fs = require('fs');
 const SelectorEvents = mongoose.model('SelectorEvents');
 var flash = require('connect-flash');
 const CodeGenerator = require('../code-generator/CodeGenerator');
-var testNumber;
-router.get('/:test', (req, res) => {
 
-     testNumber = req.params.test.slice(-1)[0];
-    console.log(testNumber, "at view time");
-    // req.flash('testNumber', testNumber)
-  SelectorEvents.find({'testNumber' : testNumber}, async function(err, docs)
+var testId;
+router.get('/:testId', (req, res) => {
+
+    testId = req.params;
+
+  SelectorEvents.find({'testId' : testId.testId},  async function(err, docs)
     {
        
         if (!err) {
-               await add_field (docs[0].events)
+            
+                // console.log(docs, "docs at edit one");
+                await add_field(docs[0].events);
                res.render('index', {  docs });
 
             
@@ -31,15 +33,15 @@ router.get('/:test', (req, res) => {
 
 router.post('/events', async(req, res) => {
     // let testNum = req.flash('testNumber')
-    //  testNumber = parseInt(testNum[0]);
-    console.log(testNumber);
+    //   testNumber = parseInt(testNum[0]);
+   
     const codeGen = new CodeGenerator()
     var code = codeGen.generate(req.body.data);
 
-     SelectorEvents.findOneAndUpdate({'testNumber' : testNumber}, { "$set": { "events":req.body.data, "script" : code }},function(err, docs)
+     SelectorEvents.findOneAndUpdate({'testId' :  testId.testId}, { "$set": { "events":req.body.data, "script" : code }},function(err, docs)
     {
-
-        createFile(code, testNumber);
+        console.log(docs.testName, "testssssssss");
+        createFile(code, docs.testName);
 
     });
 });
@@ -69,8 +71,8 @@ function add_field (arr){
   })
 }
 
-function createFile(code, testNumber){
-    var path = 'test'+testNumber;
+function createFile(code, testName){
+    var path = testName;
     fs.writeFile(`${path}.js`, code, function(err) {
         if(err) {
             return console.log(err);

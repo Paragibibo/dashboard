@@ -22,4 +22,4 @@
 //     return emailRegex.test(val);
 // }, 'Invalid e-mail.');
 
-// mongoose.model('Employee', employeeSchema);
+// mongoose.model('Employee', employeeSchema);      

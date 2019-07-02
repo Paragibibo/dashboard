@@ -11,6 +11,7 @@ var session = require('express-session');
 const selectorController = require('./controllers/selectorController');
 const runPup = require('./controllers/runPupTestsController');
 const viewPupEventController = require('./controllers/viewPupEventController');
+const testingDashboardController = require('./controllers/testingDashboardController');
 
 var app = express();
 app.use(bodyparser.urlencoded({
@@ -39,3 +40,4 @@ app.listen(3000, () => {
 app.use('/log',selectorController);
 app.use('/run',runPup);
 app.use('/view',viewPupEventController);
+app.use('/testingDashboard',testingDashboardController);

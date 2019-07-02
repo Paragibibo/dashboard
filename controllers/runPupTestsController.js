@@ -6,17 +6,18 @@ const puppeteer = require('puppeteer');
 const sleep = require('sleep');
 
 
-router.get('/:test', (req, res) => {
+router.get('/:testName', (req, res) => {
 
-    var testNumber = req.params.test.slice(-1)[0]
-    console.log(testNumber,"atrun time");
+    var testName = req.params.testName;
+    console.log(testName,"atrun time");
     
-    SelectorEvents.find({ 'testNumber':testNumber }, async function (err, docs) {
+    SelectorEvents.find({ 'testName':testName }, async function (err, docs) {
         if(!err)
         {
 
             
             try {
+              
                 eval(docs[0].script);
                 await testcase();
                 res.send( { 'status' : 200, 'success' :'puppeteer script run successfully and check the ouput screenshot'} )

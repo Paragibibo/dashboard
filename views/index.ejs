@@ -60,6 +60,7 @@
         </tbody>
       </table>
       <button id ="subTheChanges" onClick ="SubmitChange()" type="submit" class="btn btn-primary btn-block mt-2">Submit the Changes</button>
+      <a href="/run/<%= docs[0].testName %>"class="btn btn-xs btn-info pull-right">Run Test After Submit Changes</a>
       
     </div>
   </div>
@@ -76,6 +77,7 @@
   <% block('scripts').append(`<script>
     var test = document.getElementsByClassName('test');
     var x = JSON.parse(test[0].dataset.testValue)[0].events;
+   
     // console.log(x, " first one");
     var GlobalEditId = null;
 
@@ -206,6 +208,13 @@ function SubmitChange(){
    $.post(url, send, function(res) {
       console.log(test,"tfuygj");
     })
+}
+
+function runtestCase(){
+
+console.log('clicked the submitascascascascs');
+
+
 }
 
 $('tbody').sortable({

@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 
 var selectorSchema = new mongoose.Schema({
 
-    testNumber : {
-        type: Number,
-    },
-
-    events : {
+        events : {
             type: Array        
     },
-    script: String 
+    script: String ,
+    testName : String,
+    testId : String,
+    testDesc: String
 
 });
 

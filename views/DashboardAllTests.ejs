@@ -1,0 +1,87 @@
+<%- layout('layouts/main.ejs')%>
+
+  <div class="row mt-5">
+
+    <div class="col-md-6">
+
+    </div>
+
+    <div class="col-md-6">
+        <div class='test' hidden data-test-value='<%= JSON.stringify(docs) %>'></div>
+      <table class="table table-bordered bg-light table-hover" id ="test">
+        <thead>
+          <tr class="headings">
+            <td>TestName</td>
+            <td>TestId</td>
+            <td>Test Description</td>
+            <td>Delete</td>
+            <td>Edit</td>
+          </tr>
+        </thead>
+        <tbody id="myEvents" >
+          <% docs.forEach(function (elements) { %>
+            <tr> 
+              <td><%= elements.testName %></td>
+              <td><%= elements.testId %></td>
+              <td><%= elements.testDesc %></td>
+              <td>
+                  <a onclick="deleteClick('<%= elements.testId %>',$(this) )"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+              </td>
+              <td>
+                  <a  href="/view/<%= elements.testId %>" ><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+     
+      
+    </div>
+  </div>
+
+  <style>
+    .product-highlight {
+      background: red;
+    }
+    tbody tr:hover {
+      cursor: move; 
+    }
+  </style>
+
+  <% block('scripts').append(`<script>
+    var test = document.getElementsByClassName('test');
+    var x = JSON.parse(test[0].dataset.testValue)[0];
+    
+    console.log(y, " first one");
+
+
+    function deleteClick(id,row) {
+
+      for (var i = x.length - 1; i >= 0; --i) {
+           if (x[i].testId == id) { 
+                 x.splice(i,1);
+            }
+        }
+      $(row.closest("tr")).remove()
+
+      console.log(x, " after delete row");
+        
+    }
+
+  function editClick(id,row) {
+
+    
+    const url = 'view/';
+    console.log(x);
+    
+    $.ajax({
+        type: 'GET',
+        url: 'view/',
+        success: function(result) {
+            console.log('done');
+        }
+      });
+
+
+  }
+</script>`)%>
