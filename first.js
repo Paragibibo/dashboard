@@ -32,11 +32,6 @@ async function testcase (){
       });
 
   
-  await page.waitForSelector('#content #Home')
- 
-  await page.click('#content #Home')
-
-  
   await page.waitForSelector('.blueBg #gosuggest_inputL')
  
   await page.click('.blueBg #gosuggest_inputL')
@@ -46,7 +41,7 @@ async function testcase (){
 
   
    try {await page.waitForResponse( response => {
-    if(response.status() === 200 && response.url().match('https://voyager.goibibo.com/api/v1/hotels_search/find_node_by_name/') ){
+    if(response.status() === 200 && response.url().match('gggg') ){
       console.log(response.url());
  return true; 
 }},{timeout:3000})} 

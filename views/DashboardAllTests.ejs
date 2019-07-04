@@ -6,6 +6,10 @@
 
     <div class="col-md-12">
         <div class='test' hidden data-test-value='<%= JSON.stringify(docs) %>'></div>
+        <div id="fade"></div>
+        <div id="modal">
+                <img id="loader" src="../Spinner.gif" />
+        </div>
       <table class="table table-bordered bg-light table-hover" id ="test">
         <thead>
           <tr class="headings">
@@ -53,6 +57,38 @@
     tbody tr:hover {
       cursor: move; 
     }
+
+
+    #fade {
+    display: none;
+    position:absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: #ababab;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .70;
+    filter: alpha(opacity=80);
+}
+
+#modal {
+    display: none;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    width: 64px;
+    height: 64px;
+    padding:30px 15px 0px;
+    border: 3px solid #ababab;
+    box-shadow:1px 1px 10px #ababab;
+    border-radius:20px;
+    background-color: white;
+    z-index: 1002;
+    text-align:center;
+    overflow: auto;
+}
   </style>
 
   <% block('scripts').append(`<script>
@@ -60,14 +96,24 @@
     var x = JSON.parse(test[0].dataset.testValue)[0];
     
    
+    function openModal() {
+        document.getElementById('modal').style.display = 'block';
+        document.getElementById('fade').style.display = 'block';
+    }
 
+    function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('fade').style.display = 'none';
+    }
 
     function runTest(testName) {
-        alert('run the script in backend');
+        // alert('run the script in backend');
+        openModal();
         $.ajax({
         type: 'GET',
         url: 'run/' + testName,
         success: function(result) {
+            closeModal();
             console.log(result);
             alert('status: ' + result.status + 'Success: ' +result.success);
         }

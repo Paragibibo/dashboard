@@ -38,6 +38,8 @@
             <!-- <td>Delete</td>
             <td>Edit</td> -->
             <td>Wait For Api</td>
+            <td>API Regex</td>
+
           </tr>
         </thead>
         <tbody id="myEvents" >
@@ -60,6 +62,14 @@
                     <button id ="awaitForButton" onClick ="awaitFor('<%= elements.id %>', '<%= elements.waitfor %>' ,$(this) )" style="background-color:red" class="btn btn-primary btn-block mt-2">Await For</button>
                   <% } %>  
                 <% } %>
+                </td>
+                <td>
+                    <% if(elements.action == 'record_api'){ %>
+                      <form id="myform" onsubmit="return RegexApi('<%= elements.id %>' , $(this) , $(this).serializeArray()  )">
+                          <input type="url" name='name' id='name' placeholder="https://example.com" pattern="https://.*"/>
+                          <button type='submit'>Rename Api</button>
+                      </form>
+                  <% } %>
                 </td>
             </tr>
           <% }) %>
@@ -203,6 +213,30 @@
   console.log(x ,  "after await");
 }
 
+function RegexApi( id , context, val){
+
+  console.log( val[0].value,'called')
+  if(val[0].value)
+  {
+
+    for (var i = x.length - 1; i >= 0; --i) {
+            if (x[i].id == id) {
+
+              
+              x[i].selector = val[0].value;
+              console.log(val[0].value, " api changed", x[i]) ;
+            }
+        }
+
+  }
+
+  return false;
+
+  
+}
+
+
+
 function SubmitChange(){
 
   console.log('clicked the submitascascascascs')
@@ -215,6 +249,7 @@ function SubmitChange(){
 
     return true;
 }
+
 
 $('tbody').sortable({
       items: "tr:not('.headings')",

@@ -37,6 +37,7 @@ router.post('/events', async(req, res) => {
    
     const codeGen = new CodeGenerator()
     var code = codeGen.generate(req.body.data);
+    
 
     await  SelectorEvents.findOneAndUpdate({'testId' :  testId.testId}, { "$set": { "events":req.body.data, "script" : code , "isScriptReady": true }}, async function(err, docs)
     {
